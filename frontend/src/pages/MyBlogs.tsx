@@ -1,11 +1,12 @@
-import { BlogSkeleton } from "../components/Skeleton";
 import { Appbar } from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
-import { useBlogs } from "../hooks";
 import { SelectBlog } from "../components/SelectBlogs";
-export function Blogs() {
-  const { isLoading, blogs } = useBlogs();
-  if (isLoading) {
+import { BlogSkeleton } from "../components/Skeleton";
+import { useMyBlogs } from "../hooks";
+
+export const MyBlogs = () => {
+  const { isMyLoading, myBlogs } = useMyBlogs();
+  if (isMyLoading) {
     return (
       <div>
         <Appbar />
@@ -28,7 +29,7 @@ export function Blogs() {
       <div className="flex justify-center">
         <div className="p-5 flex justify-center w-1/2">
           <div className="flex flex-col justify-center w-full">
-            {blogs.map((blog) => (
+            {myBlogs.map((blog) => (
               <BlogCard
                 key={blog.id}
                 id={blog.id}
@@ -43,4 +44,4 @@ export function Blogs() {
       </div>
     </div>
   );
-}
+};

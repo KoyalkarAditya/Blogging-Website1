@@ -55,3 +55,38 @@ export const useBlogs = () => {
     blogs,
   };
 };
+
+export const useMyBlogs = () => {
+  const [isMyLoading, setIsLoading] = useState(true);
+  const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.post(
+          `${BACKEND_URL}/api/v1/blog/myblogs`,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        setMyBlogs(response.data.blogs);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, [myBlogs]);
+
+  return {
+    isMyLoading,
+    myBlogs,
+  };
+};
