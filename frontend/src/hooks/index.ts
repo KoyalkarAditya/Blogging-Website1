@@ -64,15 +64,11 @@ export const useMyBlogs = () => {
     const fetchBlogs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.post(
-          `${BACKEND_URL}/api/v1/blog/myblogs`,
-          {
-            headers: {
-              Authorization: token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.get(`${BACKEND_URL}/api/v1/blog/myblogs`, {
+          headers: {
+            Authorization: token,
+          },
+        });
 
         setMyBlogs(response.data.blogs);
         setIsLoading(false);

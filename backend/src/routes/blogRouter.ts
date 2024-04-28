@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
-import { sign, verify } from "hono/jwt";
+import { verify } from "hono/jwt";
 import {
   createBlogInput,
   updateBlogInput,
@@ -108,6 +108,30 @@ blogRouter.get("/bulk", async (c) => {
     blogs,
   });
 });
+blogRouter.get("/myblogs", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  const userId = c.get("userId");
+  const blogs = await prisma.post.findMany({
+    where: {
+      authorId: userId,
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  return c.json({
+    blogs,
+  });
+});
 blogRouter.get("/:id", async (c) => {
   const id = c.req.param("id");
   try {
@@ -139,4 +163,3 @@ blogRouter.get("/:id", async (c) => {
     });
   }
 });
-//add pagination
