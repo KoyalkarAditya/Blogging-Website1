@@ -163,3 +163,24 @@ blogRouter.get("/:id", async (c) => {
     });
   }
 });
+blogRouter.post("/delete/:id", async (c) => {
+  const id = c.req.param("id");
+  try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+    await prisma.post.delete({
+      where: {
+        id,
+      },
+    });
+    c.status(200);
+    return c.json({
+      message: "deleted successfully",
+    });
+  } catch (e) {
+    return c.json({
+      message: "Cannot delete",
+    });
+  }
+});
